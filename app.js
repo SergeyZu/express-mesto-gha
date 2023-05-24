@@ -1,7 +1,9 @@
 const express = require('express');
 const bodyParser = require('body-parser');
+const mongoose = require('mongoose');
 const router = require('./routes');
-// const cardsRouter = require('./routes/cards');
+
+mongoose.connect('mongodb://127.0.0.1:27017/mestodb');
 
 const app = express();
 
