@@ -34,7 +34,7 @@ const createCard = (req, res) => {
 };
 
 const deleteCard = (req, res) => {
-  console.log(req.params);
+  // console.log(req.params);
   cardModel
     .findByIdAndRemove(req.params.cardId)
     .then(() => {
@@ -49,8 +49,48 @@ const deleteCard = (req, res) => {
     });
 };
 
+const setLike = (req, res) => {
+  cardModel
+    .findByIdAndUpdate(
+      req.params.cardId,
+      { $addToSet: { likes: req.user._id } },
+      { new: true }
+    )
+    .then((card) => {
+      res.send(card);
+    })
+    .catch((err) => {
+      res.status(500).send({
+        message: 'Internal Server Error',
+        err: err.message,
+        stack: err.stack,
+      });
+    });
+};
+
+const removeLike = (req, res) => {
+  cardModel
+    .findByIdAndUpdate(
+      req.params.cardId,
+      { $pull: { likes: req.user._id } },
+      { new: true }
+    )
+    .then((card) => {
+      res.send(card);
+    })
+    .catch((err) => {
+      res.status(500).send({
+        message: 'Internal Server Error',
+        err: err.message,
+        stack: err.stack,
+      });
+    });
+};
+
 module.exports = {
   getCards,
   createCard,
   deleteCard,
+  setLike,
+  removeLike,
 };

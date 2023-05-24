@@ -45,8 +45,45 @@ const createUser = (req, res) => {
     });
 };
 
+const updateUser = (req, res) => {
+  userModel
+    .findByIdAndUpdate(
+      req.user._id,
+      { name: req.body.name, about: req.body.about },
+      { new: true }
+    )
+    .then((user) => {
+      res.send(user);
+    })
+    .catch((err) => {
+      res.status(500).send({
+        message: 'Internal Server Error',
+        err: err.message,
+        stack: err.stack,
+      });
+    });
+};
+
+const updateUserAvatar = (req, res) => {
+  // const { avatar } = req.body;
+  userModel
+    .findByIdAndUpdate(req.user._id, { avatar: req.body.avatar }, { new: true })
+    .then((user) => {
+      res.send(user);
+    })
+    .catch((err) => {
+      res.status(500).send({
+        message: 'Internal Server Error',
+        err: err.message,
+        stack: err.stack,
+      });
+    });
+};
+
 module.exports = {
   getUsers,
   getUserById,
   createUser,
+  updateUser,
+  updateUserAvatar,
 };

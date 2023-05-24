@@ -14,8 +14,8 @@ app.use(bodyParser.json());
 
 app.use((req, res, next) => {
   req.user = {
-    // _id: new mongoose.Types.ObjectId('646d6819a72ab810aca5fabb'),
-    _id: '646d6819a72ab810aca5fabb',
+    _id: new mongoose.Types.ObjectId('646d6819a72ab810aca5fabb'),
+    // _id: '646d6819a72ab810aca5fabb',
   };
   next();
 });
