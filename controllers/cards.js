@@ -33,7 +33,24 @@ const createCard = (req, res) => {
     });
 };
 
+const deleteCard = (req, res) => {
+  console.log(req.params);
+  cardModel
+    .findByIdAndRemove(req.params.cardId)
+    .then(() => {
+      res.send({ message: 'Card deleted' });
+    })
+    .catch((err) => {
+      res.status(500).send({
+        message: 'Internal Server Error',
+        err: err.message,
+        stack: err.stack,
+      });
+    });
+};
+
 module.exports = {
   getCards,
   createCard,
+  deleteCard,
 };
