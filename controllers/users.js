@@ -4,7 +4,7 @@ const getUsers = (req, res) => {
   userModel
     .find({})
     .then((users) => {
-      res.send(users);
+      res.status(200).send(users);
     })
     .catch((err) => {
       res.status(500).send({
@@ -19,7 +19,7 @@ const getUserById = (req, res) => {
   userModel
     .findById(req.params.user_id)
     .then((user) => {
-      res.send(user);
+      res.status(200).send(user);
     })
     .catch((err) => {
       res.status(500).send({
