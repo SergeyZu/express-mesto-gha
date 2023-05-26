@@ -36,7 +36,9 @@ const getUserById = (req, res) => {
         return;
       }
       if (req.params.user_id.length !== 24) {
-        res.status(NOT_FOUND).send({ message: 'Пользователь не найден' });
+        res
+          .status(BAD_REQUEST)
+          .send({ message: 'Введен некорректный id пользователя' });
         return;
       }
       res.status(INTERNAL_SERVER_ERROR).send({
