@@ -4,8 +4,10 @@ const {
   OK,
   CREATED,
   BAD_REQUEST,
+  NOT_FOUND,
   INTERNAL_SERVER_ERROR,
 } = require('../utils/status-codes');
+// const NotFoundError = require('../errors/NotFoundError');
 
 const getUsers = (req, res) => {
   userModel
@@ -31,6 +33,10 @@ const getUserById = (req, res) => {
     .catch((err) => {
       if (err instanceof mongoose.Error.ValidationError) {
         res.status(BAD_REQUEST).send({ message: 'Ошибка валидации' });
+        return;
+      }
+      if (req.params.user_id.length !== 24) {
+        res.status(NOT_FOUND).send({ message: 'Пользователь не найден' });
         return;
       }
       res.status(INTERNAL_SERVER_ERROR).send({
