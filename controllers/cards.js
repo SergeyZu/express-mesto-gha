@@ -1,13 +1,19 @@
 const cardModel = require('../models/card');
+const {
+  OK,
+  CREATED,
+  BAD_REQUEST,
+  INTERNAL_SERVER_ERROR,
+} = require('../utils/status-codes');
 
 const getCards = (req, res) => {
   cardModel
     .find({})
     .then((cards) => {
-      res.status(200).send(cards);
+      res.status(OK).send(cards);
     })
     .catch((err) => {
-      res.status(500).send({
+      res.status(INTERNAL_SERVER_ERROR).send({
         message: 'Internal Server Error',
         err: err.message,
         stack: err.stack,
@@ -22,14 +28,16 @@ const createCard = (req, res) => {
       ...req.body,
     })
     .then((card) => {
-      res.status(201).send(card);
+      res.status(CREATED).send(card);
     })
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        res.status(400).send({ message: 'Переданы некорректные данные' });
+        res
+          .status(BAD_REQUEST)
+          .send({ message: 'Переданы некорректные данные' });
         return;
       }
-      res.status(500).send({
+      res.status(INTERNAL_SERVER_ERROR).send({
         message: 'Internal Server Error',
         err: err.message,
         stack: err.stack,
@@ -45,7 +53,7 @@ const deleteCard = (req, res) => {
       res.send({ message: 'Card deleted' });
     })
     .catch((err) => {
-      res.status(500).send({
+      res.status(INTERNAL_SERVER_ERROR).send({
         message: 'Internal Server Error',
         err: err.message,
         stack: err.stack,
@@ -61,10 +69,10 @@ const setLike = (req, res) => {
       { new: true }
     )
     .then((card) => {
-      res.status(201).send(card);
+      res.status(CREATED).send(card);
     })
     .catch((err) => {
-      res.status(500).send({
+      res.status(INTERNAL_SERVER_ERROR).send({
         message: 'Internal Server Error',
         err: err.message,
         stack: err.stack,
@@ -83,7 +91,7 @@ const removeLike = (req, res) => {
       res.send(card);
     })
     .catch((err) => {
-      res.status(500).send({
+      res.status(INTERNAL_SERVER_ERROR).send({
         message: 'Internal Server Error',
         err: err.message,
         stack: err.stack,

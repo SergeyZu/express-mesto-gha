@@ -1,14 +1,20 @@
 const mongoose = require('mongoose');
 const userModel = require('../models/user');
+const {
+  OK,
+  CREATED,
+  BAD_REQUEST,
+  INTERNAL_SERVER_ERROR,
+} = require('../utils/status-codes');
 
 const getUsers = (req, res) => {
   userModel
     .find({})
     .then((users) => {
-      res.status(200).send(users);
+      res.status(OK).send(users);
     })
     .catch((err) => {
-      res.status(500).send({
+      res.status(INTERNAL_SERVER_ERROR).send({
         message: 'Internal Server Error',
         err: err.message,
         stack: err.stack,
@@ -20,14 +26,14 @@ const getUserById = (req, res) => {
   userModel
     .findById(req.params.user_id)
     .then((user) => {
-      res.status(200).send(user);
+      res.status(OK).send(user);
     })
     .catch((err) => {
       if (err instanceof mongoose.Error.ValidationError) {
-        res.status(400).send({ message: 'Ошибка валидации' });
+        res.status(BAD_REQUEST).send({ message: 'Ошибка валидации' });
         return;
       }
-      res.status(500).send({
+      res.status(INTERNAL_SERVER_ERROR).send({
         message: 'Internal Server Error',
         err: err.message,
         stack: err.stack,
@@ -40,22 +46,19 @@ const createUser = (req, res) => {
   userModel
     .create(req.body)
     .then((user) => {
-      res.status(201).send(user);
+      res.status(CREATED).send(user);
     })
     .catch((err) => {
       if (err instanceof mongoose.Error.ValidationError) {
-        res.status(400).send({
+        res.status(BAD_REQUEST).send({
           message: 'Ошибка валидации',
           name: err.name,
           stack: err.stack,
         });
         return;
       }
-      // if (err.name === 'ValidationError') {
-      //   res.status(400).send({ message: 'Переданы некорректные данные' });
-      //   return;
-      // }
-      res.status(500).send({
+
+      res.status(INTERNAL_SERVER_ERROR).send({
         message: 'Internal Server Error',
         err: err.message,
         stack: err.stack,
@@ -71,18 +74,18 @@ const updateUser = (req, res) => {
       { new: true }
     )
     .then((user) => {
-      res.status(200).send(user);
+      res.status(OK).send(user);
     })
     .catch((err) => {
       if (err instanceof mongoose.Error.ValidationError) {
-        res.status(400).send({
+        res.status(BAD_REQUEST).send({
           message: 'Ошибка валидации',
           name: err.name,
           stack: err.stack,
         });
         return;
       }
-      res.status(500).send({
+      res.status(INTERNAL_SERVER_ERROR).send({
         message: 'Internal Server Error',
         err: err.message,
         stack: err.stack,
@@ -98,7 +101,7 @@ const updateUserAvatar = (req, res) => {
       res.send(user);
     })
     .catch((err) => {
-      res.status(500).send({
+      res.status(INTERNAL_SERVER_ERROR).send({
         message: 'Internal Server Error',
         err: err.message,
         stack: err.stack,
