@@ -6,7 +6,7 @@ router.use('/users', usersRouter);
 router.use('/cards', cardsRouter);
 
 router.use((req, res) => {
-  res.status(404).send({ message: 'Запрашиваемая страница не найдена' });
+  res.status(404).send({ message: 'Not found' });
 });
 
 module.exports = router;

@@ -44,7 +44,11 @@ const createUser = (req, res) => {
     })
     .catch((err) => {
       if (err instanceof mongoose.Error.ValidationError) {
-        res.status(400).send({ message: 'Ошибка валидации' });
+        res.status(400).send({
+          message: 'Ошибка валидации',
+          name: err.name,
+          stack: err.stack,
+        });
         return;
       }
       // if (err.name === 'ValidationError') {
