@@ -71,7 +71,7 @@ const updateUser = (req, res) => {
       { new: true }
     )
     .then((user) => {
-      res.send(user);
+      res.status(200).send(user);
     })
     .catch((err) => {
       if (err instanceof mongoose.Error.ValidationError) {

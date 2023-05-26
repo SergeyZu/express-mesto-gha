@@ -61,7 +61,7 @@ const setLike = (req, res) => {
       { new: true }
     )
     .then((card) => {
-      res.send(card);
+      res.status(201).send(card);
     })
     .catch((err) => {
       res.status(500).send({
