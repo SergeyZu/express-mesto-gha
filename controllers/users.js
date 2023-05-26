@@ -74,6 +74,14 @@ const updateUser = (req, res) => {
       res.send(user);
     })
     .catch((err) => {
+      if (err instanceof mongoose.Error.ValidationError) {
+        res.status(400).send({
+          message: 'Ошибка валидации',
+          name: err.name,
+          stack: err.stack,
+        });
+        return;
+      }
       res.status(500).send({
         message: 'Internal Server Error',
         err: err.message,
