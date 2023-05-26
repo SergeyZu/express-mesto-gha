@@ -1,3 +1,4 @@
+const mongoose = require('mongoose');
 const userModel = require('../models/user');
 
 const getUsers = (req, res) => {
@@ -22,6 +23,10 @@ const getUserById = (req, res) => {
       res.status(200).send(user);
     })
     .catch((err) => {
+      if (err instanceof mongoose.Error.ValidationError) {
+        res.status(400).send({ message: 'Ошибка валидации' });
+        return;
+      }
       res.status(500).send({
         message: 'Internal Server Error',
         err: err.message,
@@ -38,10 +43,14 @@ const createUser = (req, res) => {
       res.status(201).send(user);
     })
     .catch((err) => {
-      if (err.name === 'ValidationError') {
-        res.status(400).send({ message: 'Переданы некорректные данные' });
+      if (err instanceof mongoose.Error.ValidationError) {
+        res.status(400).send({ message: 'Ошибка валидации' });
         return;
       }
+      // if (err.name === 'ValidationError') {
+      //   res.status(400).send({ message: 'Переданы некорректные данные' });
+      //   return;
+      // }
       res.status(500).send({
         message: 'Internal Server Error',
         err: err.message,
