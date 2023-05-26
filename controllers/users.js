@@ -35,12 +35,18 @@ const getUserById = (req, res) => {
         res.status(BAD_REQUEST).send({ message: 'Ошибка валидации' });
         return;
       }
-      if (req.params.user_id.length !== 24) {
+      if (err instanceof mongoose.Error.CastError) {
         res
           .status(BAD_REQUEST)
-          .send({ message: 'Введен некорректный id пользователя' });
+          .send({ message: 'Введены некорректные данные' });
         return;
       }
+      // if (req.params.user_id.length !== 24) {
+      //   res
+      //     .status(BAD_REQUEST)
+      //     .send({ message: 'Введен некорректный id пользователя' });
+      //   return;
+      // }
       res.status(INTERNAL_SERVER_ERROR).send({
         message: 'Internal Server Error',
         err: err.message,
