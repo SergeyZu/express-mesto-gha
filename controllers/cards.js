@@ -84,6 +84,9 @@ const setLike = (req, res) => {
       { $addToSet: { likes: req.user._id } },
       { new: true }
     )
+    .orFail(() => {
+      throw new NotFoundError('Карточка не найдена');
+    })
     .then((card) => {
       res.status(CREATED).send(card);
     })
@@ -92,6 +95,10 @@ const setLike = (req, res) => {
         res
           .status(BAD_REQUEST)
           .send({ message: 'Введены некорректные данные' });
+        return;
+      }
+      if (err instanceof NotFoundError) {
+        res.status(NOT_FOUND).send({ message: 'Карточка не найдена' });
         return;
       }
       res.status(INTERNAL_SERVER_ERROR).send({
@@ -109,6 +116,9 @@ const removeLike = (req, res) => {
       { $pull: { likes: req.user._id } },
       { new: true }
     )
+    .orFail(() => {
+      throw new NotFoundError('Карточка не найдена');
+    })
     .then((card) => {
       res.send(card);
     })
@@ -117,6 +127,10 @@ const removeLike = (req, res) => {
         res
           .status(BAD_REQUEST)
           .send({ message: 'Введены некорректные данные' });
+        return;
+      }
+      if (err instanceof NotFoundError) {
+        res.status(NOT_FOUND).send({ message: 'Карточка не найдена' });
         return;
       }
       res.status(INTERNAL_SERVER_ERROR).send({
