@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-// const NotFoundError = require('../errors/NotFoundError');
+const NotFoundError = require('../errors/NotFoundError');
 const userModel = require('../models/user');
 const {
   OK,
@@ -24,33 +24,33 @@ const getUsers = (req, res) => {
 };
 
 const getUserById = async (req, res) => {
-  // const user = await userModel.findById(req.params.userId);
-  // if (!user) {
-  //   throw new NotFoundError('Пользователь не найден');
-  //   res.send({ data: user })
-  // }
-  userModel
-    .findById(req.params.user_id)
-    .then((user) => {
-      res.status(OK).send(user);
-    })
-    .catch((err) => {
-      if (err instanceof mongoose.Error.ValidationError) {
-        res.status(BAD_REQUEST).send({ message: 'Ошибка валидации' });
-        return;
-      }
-      if (err instanceof mongoose.Error.CastError) {
-        res
-          .status(BAD_REQUEST)
-          .send({ message: 'Введены некорректные данные' });
-        return;
-      }
-      res.status(INTERNAL_SERVER_ERROR).send({
-        message: 'Internal Server Error',
-        err: err.message,
-        stack: err.stack,
-      });
+  try {
+    const user = await userModel.findById(req.params.userId);
+    if (!user) {
+      throw new NotFoundError('Пользователь не найден');
+    }
+    res.send({ data: user });
+    // }
+    // userModel
+    //   .findById(req.params.user_id)
+    //   .then((user) => {
+    //     res.status(OK).send(user);
+    //   })
+  } catch (err) {
+    if (err instanceof mongoose.Error.ValidationError) {
+      res.status(BAD_REQUEST).send({ message: 'Ошибка валидации' });
+      return;
+    }
+    if (err instanceof mongoose.Error.CastError) {
+      res.status(BAD_REQUEST).send({ message: 'Введены некорректные данные' });
+      return;
+    }
+    res.status(INTERNAL_SERVER_ERROR).send({
+      message: 'Internal Server Error',
+      err: err.message,
+      stack: err.stack,
     });
+  }
 };
 
 // Добавление пользователя
