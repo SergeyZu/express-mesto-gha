@@ -1,10 +1,11 @@
 const mongoose = require('mongoose');
-
+const NotFoundError = require('../errors/NotFoundError');
 const cardModel = require('../models/card');
 const {
   OK,
   CREATED,
   BAD_REQUEST,
+  NOT_FOUND,
   INTERNAL_SERVER_ERROR,
 } = require('../utils/status-codes');
 
@@ -51,6 +52,9 @@ const deleteCard = (req, res) => {
   // console.log(req.params);
   cardModel
     .findByIdAndRemove(req.params.cardId)
+    .orFail(() => {
+      throw new NotFoundError('Карточка не найдена');
+    })
     .then(() => {
       res.send({ message: 'Card deleted' });
     })
@@ -59,6 +63,10 @@ const deleteCard = (req, res) => {
         res
           .status(BAD_REQUEST)
           .send({ message: 'Введены некорректные данные' });
+        return;
+      }
+      if (err instanceof NotFoundError) {
+        res.status(NOT_FOUND).send({ message: 'Карточка не найдена' });
         return;
       }
       res.status(INTERNAL_SERVER_ERROR).send({
