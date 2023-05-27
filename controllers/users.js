@@ -26,6 +26,7 @@ const getUsers = (req, res) => {
 const getUserById = async (req, res) => {
   try {
     const user = await userModel.findById(req.params.userId);
+
     if (!user) {
       throw new NotFoundError('Пользователь не найден');
     }
