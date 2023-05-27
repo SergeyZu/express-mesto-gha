@@ -1,3 +1,5 @@
+const mongoose = require('mongoose');
+
 const cardModel = require('../models/card');
 const {
   OK,
@@ -53,6 +55,12 @@ const deleteCard = (req, res) => {
       res.send({ message: 'Card deleted' });
     })
     .catch((err) => {
+      if (err instanceof mongoose.Error.CastError) {
+        res
+          .status(BAD_REQUEST)
+          .send({ message: 'Введены некорректные данные' });
+        return;
+      }
       res.status(INTERNAL_SERVER_ERROR).send({
         message: 'Internal Server Error',
         err: err.message,
@@ -72,6 +80,12 @@ const setLike = (req, res) => {
       res.status(CREATED).send(card);
     })
     .catch((err) => {
+      if (err instanceof mongoose.Error.CastError) {
+        res
+          .status(BAD_REQUEST)
+          .send({ message: 'Введены некорректные данные' });
+        return;
+      }
       res.status(INTERNAL_SERVER_ERROR).send({
         message: 'Internal Server Error',
         err: err.message,
@@ -91,6 +105,12 @@ const removeLike = (req, res) => {
       res.send(card);
     })
     .catch((err) => {
+      if (err instanceof mongoose.Error.CastError) {
+        res
+          .status(BAD_REQUEST)
+          .send({ message: 'Введены некорректные данные' });
+        return;
+      }
       res.status(INTERNAL_SERVER_ERROR).send({
         message: 'Internal Server Error',
         err: err.message,

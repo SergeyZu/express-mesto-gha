@@ -4,7 +4,6 @@ const {
   OK,
   CREATED,
   BAD_REQUEST,
-  NOT_FOUND,
   INTERNAL_SERVER_ERROR,
 } = require('../utils/status-codes');
 // const NotFoundError = require('../errors/NotFoundError');
@@ -91,6 +90,12 @@ const updateUser = (req, res) => {
       res.status(OK).send(user);
     })
     .catch((err) => {
+      if (err instanceof mongoose.Error.CastError) {
+        res
+          .status(BAD_REQUEST)
+          .send({ message: 'Введены некорректные данные' });
+        return;
+      }
       if (err instanceof mongoose.Error.ValidationError) {
         res.status(BAD_REQUEST).send({
           message: 'Ошибка валидации',
