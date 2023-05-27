@@ -5,6 +5,7 @@ const {
   OK,
   CREATED,
   BAD_REQUEST,
+  NOT_FOUND,
   INTERNAL_SERVER_ERROR,
 } = require('../utils/status-codes');
 
@@ -73,7 +74,7 @@ const getUserById = (req, res) => {
         return;
       }
       if (err instanceof NotFoundError) {
-        res.status(BAD_REQUEST).send({ message: 'Пользователь не найден' });
+        res.status(NOT_FOUND).send({ message: 'Пользователь не найден' });
         return;
       }
       res.status(INTERNAL_SERVER_ERROR).send({
