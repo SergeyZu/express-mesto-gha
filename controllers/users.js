@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+// const NotFoundError = require('../errors/NotFoundError');
 const userModel = require('../models/user');
 const {
   OK,
@@ -6,7 +7,6 @@ const {
   BAD_REQUEST,
   INTERNAL_SERVER_ERROR,
 } = require('../utils/status-codes');
-// const NotFoundError = require('../errors/NotFoundError');
 
 const getUsers = (req, res) => {
   userModel
@@ -23,7 +23,12 @@ const getUsers = (req, res) => {
     });
 };
 
-const getUserById = (req, res) => {
+const getUserById = async (req, res) => {
+  // const user = await userModel.findById(req.params.userId);
+  // if (!user) {
+  //   throw new NotFoundError('Пользователь не найден');
+  //   res.send({ data: user })
+  // }
   userModel
     .findById(req.params.user_id)
     .then((user) => {
@@ -40,12 +45,6 @@ const getUserById = (req, res) => {
           .send({ message: 'Введены некорректные данные' });
         return;
       }
-      // if (req.params.user_id.length !== 24) {
-      //   res
-      //     .status(BAD_REQUEST)
-      //     .send({ message: 'Введен некорректный id пользователя' });
-      //   return;
-      // }
       res.status(INTERNAL_SERVER_ERROR).send({
         message: 'Internal Server Error',
         err: err.message,
@@ -84,7 +83,7 @@ const updateUser = (req, res) => {
     .findByIdAndUpdate(
       req.user._id,
       { name: req.body.name, about: req.body.about },
-      { new: true }
+      { new: true, runValidators: true }
     )
     .then((user) => {
       res.status(OK).send(user);
