@@ -22,13 +22,8 @@ app.use(express.json());
 app.use((req, res, next) => {
   req.user = {
     _id: new mongoose.Types.ObjectId('646d6819a72ab810aca5fabb'),
-    // _id: '646d6819a72ab810aca5fabb',
   };
   next();
 });
-
-// app.use((req, res) => {
-//   res.status(404).send({ message: 'Запрашиваемая страница не найдена' });
-// });
 
 app.use(router);

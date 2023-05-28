@@ -49,7 +49,6 @@ const createCard = (req, res) => {
 };
 
 const deleteCard = (req, res) => {
-  // console.log(req.params);
   cardModel
     .findByIdAndRemove(req.params.cardId)
     .orFail(() => {

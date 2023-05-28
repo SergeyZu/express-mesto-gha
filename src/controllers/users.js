@@ -56,7 +56,6 @@ const getUserById = (req, res) => {
     });
 };
 
-// Добавление пользователя
 const createUser = (req, res) => {
   userModel
     .create(req.body)
