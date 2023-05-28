@@ -1,8 +1,10 @@
+const NOT_FOUND = 400;
+
 class NotFoundError extends Error {
   constructor(message) {
     super(message);
     this.name = 'NotFoundError';
-    this.statusCode = 400;
+    this.statusCode = NOT_FOUND;
   }
 }
 

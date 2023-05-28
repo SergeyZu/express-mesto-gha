@@ -1,5 +1,4 @@
 const express = require('express');
-const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const router = require('./routes');
 
@@ -19,9 +18,7 @@ mongoose
     console.log(`Ошибка подключения к базе данных ${err.name}`);
   });
 
-// app.use(express.json());
-app.use(bodyParser.json());
-
+app.use(express.json());
 app.use((req, res, next) => {
   req.user = {
     _id: new mongoose.Types.ObjectId('646d6819a72ab810aca5fabb'),
