@@ -38,13 +38,13 @@ const createCard = (req, res) => {
         res
           .status(BAD_REQUEST)
           .send({ message: 'Переданы некорректные данные' });
-        return;
+      } else {
+        res.status(INTERNAL_SERVER_ERROR).send({
+          message: 'Internal Server Error',
+          err: err.message,
+          stack: err.stack,
+        });
       }
-      res.status(INTERNAL_SERVER_ERROR).send({
-        message: 'Internal Server Error',
-        err: err.message,
-        stack: err.stack,
-      });
     });
 };
 
@@ -62,17 +62,15 @@ const deleteCard = (req, res) => {
         res
           .status(BAD_REQUEST)
           .send({ message: 'Введены некорректные данные' });
-        return;
-      }
-      if (err instanceof NotFoundError) {
+      } else if (err instanceof NotFoundError) {
         res.status(NOT_FOUND).send({ message: 'Карточка не найдена' });
-        return;
+      } else {
+        res.status(INTERNAL_SERVER_ERROR).send({
+          message: 'Internal Server Error',
+          err: err.message,
+          stack: err.stack,
+        });
       }
-      res.status(INTERNAL_SERVER_ERROR).send({
-        message: 'Internal Server Error',
-        err: err.message,
-        stack: err.stack,
-      });
     });
 };
 
@@ -94,17 +92,15 @@ const setLike = (req, res) => {
         res
           .status(BAD_REQUEST)
           .send({ message: 'Введены некорректные данные' });
-        return;
-      }
-      if (err instanceof NotFoundError) {
+      } else if (err instanceof NotFoundError) {
         res.status(NOT_FOUND).send({ message: 'Карточка не найдена' });
-        return;
+      } else {
+        res.status(INTERNAL_SERVER_ERROR).send({
+          message: 'Internal Server Error',
+          err: err.message,
+          stack: err.stack,
+        });
       }
-      res.status(INTERNAL_SERVER_ERROR).send({
-        message: 'Internal Server Error',
-        err: err.message,
-        stack: err.stack,
-      });
     });
 };
 
@@ -126,17 +122,15 @@ const removeLike = (req, res) => {
         res
           .status(BAD_REQUEST)
           .send({ message: 'Введены некорректные данные' });
-        return;
-      }
-      if (err instanceof NotFoundError) {
+      } else if (err instanceof NotFoundError) {
         res.status(NOT_FOUND).send({ message: 'Карточка не найдена' });
-        return;
+      } else {
+        res.status(INTERNAL_SERVER_ERROR).send({
+          message: 'Internal Server Error',
+          err: err.message,
+          stack: err.stack,
+        });
       }
-      res.status(INTERNAL_SERVER_ERROR).send({
-        message: 'Internal Server Error',
-        err: err.message,
-        stack: err.stack,
-      });
     });
 };
 

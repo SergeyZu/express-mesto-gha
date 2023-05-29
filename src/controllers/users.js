@@ -40,19 +40,17 @@ const getUserById = (req, res) => {
           .send({ message: 'Введены некорректные данные' });
         console.log(err.name);
         console.log(err.stack);
-        return;
-      }
-      if (err instanceof NotFoundError) {
+      } else if (err instanceof NotFoundError) {
         res.status(NOT_FOUND).send({ message: 'Пользователь не найден' });
         console.log(err.name);
         console.log(err.stack);
-        return;
+      } else {
+        res
+          .status(INTERNAL_SERVER_ERROR)
+          .send({ message: 'Internal Server Error' });
+        console.log(err.name);
+        console.log(err.stack);
       }
-      res
-        .status(INTERNAL_SERVER_ERROR)
-        .send({ message: 'Internal Server Error' });
-      console.log(err.name);
-      console.log(err.stack);
     });
 };
 
@@ -67,13 +65,13 @@ const createUser = (req, res) => {
         res.status(BAD_REQUEST).send({ message: 'Ошибка валидации' });
         console.log(err.name);
         console.log(err.stack);
-        return;
+      } else {
+        res
+          .status(INTERNAL_SERVER_ERROR)
+          .send({ message: 'Internal Server Error' });
+        console.log(err.name);
+        console.log(err.stack);
       }
-      res
-        .status(INTERNAL_SERVER_ERROR)
-        .send({ message: 'Internal Server Error' });
-      console.log(err.name);
-      console.log(err.stack);
     });
 };
 
@@ -92,13 +90,13 @@ const updateUser = (req, res) => {
         res.status(BAD_REQUEST).send({ message: 'Ошибка валидации' });
         console.log(err.name);
         console.log(err.stack);
-        return;
+      } else {
+        res
+          .status(INTERNAL_SERVER_ERROR)
+          .send({ message: 'Internal Server Error' });
+        console.log(err.name);
+        console.log(err.stack);
       }
-      res
-        .status(INTERNAL_SERVER_ERROR)
-        .send({ message: 'Internal Server Error' });
-      console.log(err.name);
-      console.log(err.stack);
     });
 };
 
@@ -115,13 +113,13 @@ const updateUserAvatar = (req, res) => {
     .catch((err) => {
       if (err instanceof mongoose.Error.ValidationError) {
         res.status(BAD_REQUEST).send({ message: 'Ошибка валидации' });
-        return;
+      } else {
+        res
+          .status(INTERNAL_SERVER_ERROR)
+          .send({ message: 'Internal Server Error' });
+        console.log(err.name);
+        console.log(err.stack);
       }
-      res
-        .status(INTERNAL_SERVER_ERROR)
-        .send({ message: 'Internal Server Error' });
-      console.log(err.name);
-      console.log(err.stack);
     });
 };
 
