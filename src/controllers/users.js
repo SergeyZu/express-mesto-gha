@@ -8,6 +8,8 @@ const {
   BAD_REQUEST,
   NOT_FOUND,
   INTERNAL_SERVER_ERROR,
+  CONFLICT,
+  MONGO_DUPLICATE_KEY_ERROR,
 } = require('../utils/status-codes');
 
 const getUsers = (req, res) => {
@@ -55,41 +57,20 @@ const getUserById = (req, res) => {
     });
 };
 
-const createUser = (req, res) => {
-  // хешируем пароль
-  bcrypt
-    .hash(req.body.password, 10)
-    .then((hash) => {
-      // const { name, about, avatar, email, password } = req.body;
-      userModel.create({
-        name: req.body.name,
-        about: req.body.about,
-        avatar: req.body.avatar,
-        email: req.body.email,
-        password: hash,
-      });
-    })
-    .then((user) => {
-      res.status(CREATED).send(user);
-    })
-    .catch((err) => {
-      if (err instanceof mongoose.Error.ValidationError) {
-        res.status(BAD_REQUEST).send({ message: 'Ошибка валидации' });
-        console.log(err.name);
-        console.log(err.stack);
-      } else {
-        res
-          .status(INTERNAL_SERVER_ERROR)
-          .send({ message: 'Internal Server Error' });
-        console.log(err.name);
-        console.log(err.stack);
-      }
-    });
-};
-
 // const createUser = (req, res) => {
-//   userModel
-//     .create(req.body)
+//   // хешируем пароль
+//   bcrypt
+//     .hash(req.body.password, 10)
+//     .then((hash) => {
+//       // const { name, about, avatar, email, password } = req.body;
+//       userModel.create({
+//         name: req.body.name,
+//         about: req.body.about,
+//         avatar: req.body.avatar,
+//         email: req.body.email,
+//         password: hash,
+//       });
+//     })
 //     .then((user) => {
 //       res.status(CREATED).send(user);
 //     })
@@ -106,7 +87,43 @@ const createUser = (req, res) => {
 //         console.log(err.stack);
 //       }
 //     });
-// }
+// };
+
+const createUser = (req, res) => {
+  const { name, about, avatar, email, password } = req.body;
+
+  bcrypt.hash(password, 10).then((hash) => {
+    console.log('hash:', hash);
+
+    userModel
+      .create({
+        name,
+        about,
+        avatar,
+        email,
+        password: hash,
+      })
+      .then((user) => {
+        res.status(CREATED).send(user);
+      })
+      .catch((err) => {
+        if (err instanceof mongoose.Error.ValidationError) {
+          res.status(BAD_REQUEST).send({ message: 'Ошибка валидации' });
+          console.log(err);
+        } else if (err.code === MONGO_DUPLICATE_KEY_ERROR) {
+          res.status(CONFLICT).send({
+            message: 'Пользователь с таким email уже зарегистрирован',
+          });
+          console.log(err);
+        } else {
+          res
+            .status(INTERNAL_SERVER_ERROR)
+            .send({ message: 'Internal Server Error' });
+          console.log(err);
+        }
+      });
+  });
+};
 
 // const createUser = (req, res) => {
 //   userModel

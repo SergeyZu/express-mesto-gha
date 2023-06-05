@@ -5,10 +5,6 @@ router.get('/', usersController.getUsers);
 
 router.get('/:user_id', usersController.getUserById);
 
-router.post('/signup', usersController.createUser);
-
-router.post('/signin', usersController.loginUser);
-
 router.patch('/me', usersController.updateUser);
 
 router.patch('/me/avatar', usersController.updateUserAvatar);
