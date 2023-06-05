@@ -1,11 +1,14 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 const NotFoundError = require('../errors/NotFoundError');
+const UnauthorizedError = require('../errors/UnauthorizedError');
+
 const userModel = require('../models/user');
 const {
   OK,
   CREATED,
   BAD_REQUEST,
+  UNAUTHORIZED,
   NOT_FOUND,
   INTERNAL_SERVER_ERROR,
   CONFLICT,
@@ -45,8 +48,7 @@ const getUserById = (req, res) => {
         console.log(err.stack);
       } else if (err instanceof NotFoundError) {
         res.status(NOT_FOUND).send({ message: 'Пользователь не найден' });
-        console.log(err.name);
-        console.log(err.stack);
+        console.log(err);
       } else {
         res
           .status(INTERNAL_SERVER_ERROR)
@@ -104,7 +106,13 @@ const createUser = (req, res) => {
         password: hash,
       })
       .then((user) => {
-        res.status(CREATED).send(user);
+        res.status(CREATED).send({
+          name: user.name,
+          about: user.about,
+          avatar: user.avatar,
+          email: user.email,
+          _id: user._id,
+        });
       })
       .catch((err) => {
         if (err instanceof mongoose.Error.ValidationError) {
@@ -135,8 +143,72 @@ const createUser = (req, res) => {
 //     .catch((err) => res.status(400).send(err));
 // };
 
+// const loginUser = (req, res) => {
+//   const { email, password } = req.body;
+
+//   userModel
+//     .findOne({ email })
+//     .then((user) => {
+//       if (!user) {
+//         return Promise.reject(new Error('Неправильные почта или пароль'));
+//       }
+
+//       return bcrypt.compare(password, user.password);
+//     })
+//     .then((matched) => {
+//       if (!matched) {
+//         return Promise.reject(new Error('Неправильные почта или пароль'));
+//       }
+//       return res.send({ message: 'Success' });
+//     })
+//     .catch((err) => {
+//       res.status(UNAUTHORIZED).send({ message: err.message });
+//     });
+
+//   res.status(OK).send({ message: 'OK' });
+// };
+
 const loginUser = (req, res) => {
-  res.status(OK).send({ message: 'OK' });
+  const { email, password } = req.body;
+
+  userModel
+    .findOne({ email })
+    .orFail(() => {
+      throw new UnauthorizedError('Неправильные почта или пароль');
+    })
+    // .then((user))
+    // .then ((user) => {
+    // res
+    //     .status(UNAUTHORIZED)
+    //     .send({ message: 'Неправильные почта или пароль' });
+    // })
+    .then((user) => {
+      console.log(user);
+      return bcrypt.compare(password, user.password);
+    })
+    .then((matched) => {
+      console.log('matched: ', matched);
+      if (!matched) {
+        res
+          .status(UNAUTHORIZED)
+          .send({ message: 'Неправильные почта или пароль' });
+      } else {
+        res.status(OK).send({ message: 'Успешно' });
+      }
+    })
+    .catch((err) => {
+      if (err instanceof UnauthorizedError) {
+        res
+          .status(UNAUTHORIZED)
+          .send({ message: 'Неправильные почта или пароль' });
+        console.log(err);
+      } else {
+        res
+          .status(INTERNAL_SERVER_ERROR)
+          .send({ message: 'Internal Server Error' });
+        console.log(err);
+      }
+    });
 };
 
 const updateUser = (req, res) => {
