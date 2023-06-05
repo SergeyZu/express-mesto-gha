@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const bcrypt = require('bcryptjs');
 const NotFoundError = require('../errors/NotFoundError');
 const userModel = require('../models/user');
 const {
@@ -55,8 +56,19 @@ const getUserById = (req, res) => {
 };
 
 const createUser = (req, res) => {
-  userModel
-    .create(req.body)
+  // хешируем пароль
+  bcrypt
+    .hash(req.body.password, 10)
+    .then((hash) => {
+      // const { name, about, avatar, email, password } = req.body;
+      userModel.create({
+        name: req.body.name,
+        about: req.body.about,
+        avatar: req.body.avatar,
+        email: req.body.email,
+        password: hash,
+      });
+    })
     .then((user) => {
       res.status(CREATED).send(user);
     })
@@ -73,6 +85,41 @@ const createUser = (req, res) => {
         console.log(err.stack);
       }
     });
+};
+
+// const createUser = (req, res) => {
+//   userModel
+//     .create(req.body)
+//     .then((user) => {
+//       res.status(CREATED).send(user);
+//     })
+//     .catch((err) => {
+//       if (err instanceof mongoose.Error.ValidationError) {
+//         res.status(BAD_REQUEST).send({ message: 'Ошибка валидации' });
+//         console.log(err.name);
+//         console.log(err.stack);
+//       } else {
+//         res
+//           .status(INTERNAL_SERVER_ERROR)
+//           .send({ message: 'Internal Server Error' });
+//         console.log(err.name);
+//         console.log(err.stack);
+//       }
+//     });
+// }
+
+// const createUser = (req, res) => {
+//   userModel
+//     .create({
+//       email: req.body.email,
+//       password: req.body.password,
+//     })
+//     .then((user) => res.send(user))
+//     .catch((err) => res.status(400).send(err));
+// };
+
+const loginUser = (req, res) => {
+  res.status(OK).send({ message: 'OK' });
 };
 
 const updateUser = (req, res) => {
@@ -127,6 +174,7 @@ module.exports = {
   getUsers,
   getUserById,
   createUser,
+  loginUser,
   updateUser,
   updateUserAvatar,
 };
