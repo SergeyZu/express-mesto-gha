@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
-// const jwt = require('jsonwebtoken');
+const jwt = require('jsonwebtoken');
 const NotFoundError = require('../errors/NotFoundError');
 const UnauthorizedError = require('../errors/UnauthorizedError');
 
@@ -105,38 +105,50 @@ const createUser = (req, res) => {
 const loginUser = (req, res) => {
   const { email, password } = req.body;
 
-  userModel
-    .findOne({ email })
-    .orFail(() => {
-      throw new UnauthorizedError('Неправильные почта или пароль');
-    })
-    .then((user) => {
-      console.log(user);
-      return bcrypt.compare(password, user.password);
-    })
-    .then((matched) => {
-      console.log('matched: ', matched);
-      if (!matched) {
-        res
-          .status(UNAUTHORIZED)
-          .send({ message: 'Неправильные почта или пароль' });
-      } else {
-        res.status(OK).send({ message: 'Успешно' });
-      }
-    })
-    .catch((err) => {
-      if (err instanceof UnauthorizedError) {
-        res
-          .status(UNAUTHORIZED)
-          .send({ message: 'Неправильные почта или пароль' });
-        console.log(err);
-      } else {
-        res
-          .status(INTERNAL_SERVER_ERROR)
-          .send({ message: 'Internal Server Error' });
-        console.log(err);
-      }
-    });
+  return (
+    userModel
+      .findUserByCredentials(email, password)
+      .then((user) => {
+        // res.status(OK).send({ message: 'Аутентификация успешна' });
+        const token = jwt.sign({ _id: user._id }, 'abra-shvabra-kadabra', {
+          expiresIn: '7d',
+        });
+        res.send({ token });
+      })
+
+      // userModel
+      // .findOne({ email })
+      // .orFail(() => {
+      //   throw new UnauthorizedError('Неправильные почта или пароль');
+      // })
+      // .then((user) => {
+      //   console.log(user);
+      //   return bcrypt.compare(password, user.password);
+      // })
+      // .then((matched) => {
+      //   console.log('matched: ', matched);
+      //   if (!matched) {
+      //     res
+      //       .status(UNAUTHORIZED)
+      //       .send({ message: 'Неправильные почта или пароль' });
+      //   } else {
+      //     res.status(OK).send({ message: 'Успешно' });
+      //   }
+      // })
+      .catch((err) => {
+        if (err instanceof UnauthorizedError) {
+          res
+            .status(UNAUTHORIZED)
+            .send({ message: 'Неправильные почта или пароль' });
+          console.log(err);
+        } else {
+          res
+            .status(INTERNAL_SERVER_ERROR)
+            .send({ message: 'Internal Server Error' });
+          console.log(err);
+        }
+      })
+  );
 };
 
 const updateUser = (req, res) => {
