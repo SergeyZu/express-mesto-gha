@@ -37,27 +37,30 @@ const userSchema = new mongoose.Schema({
   password: {
     type: String,
     required: true,
+    select: false,
   },
 });
 
 // добавим метод findUserByCredentials схеме пользователя
 userSchema.statics.findUserByCredentials = function (email, password) {
-  return this.findOne({ email }).then((user) => {
-    console.log('user:', user);
-    if (!user) {
-      return Promise.reject(
-        new UnauthorizedError('Неправильные почта или пароль')
-      );
-    }
-    return bcrypt.compare(password, user.password).then((isEqual) => {
-      if (!isEqual) {
+  return this.findOne({ email })
+    .select('+password')
+    .then((user) => {
+      console.log('user:', user);
+      if (!user) {
         return Promise.reject(
           new UnauthorizedError('Неправильные почта или пароль')
         );
       }
-      return user;
+      return bcrypt.compare(password, user.password).then((isEqual) => {
+        if (!isEqual) {
+          return Promise.reject(
+            new UnauthorizedError('Неправильные почта или пароль')
+          );
+        }
+        return user;
+      });
     });
-  });
 };
 
 module.exports = mongoose.model('user', userSchema);
