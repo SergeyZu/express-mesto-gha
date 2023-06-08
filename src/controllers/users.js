@@ -1,9 +1,9 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken');
 const NotFoundError = require('../errors/NotFoundError');
 const UnauthorizedError = require('../errors/UnauthorizedError');
-
+// const jwt = require('jsonwebtoken');
+const { signToken } = require('../utils/jwtAuth');
 const userModel = require('../models/user');
 const {
   OK,
@@ -109,11 +109,9 @@ const loginUser = (req, res) => {
     userModel
       .findUserByCredentials(email, password)
       .then((user) => {
-        const token = jwt.sign({ _id: user._id }, 'abra-shvabra-kadabra', {
-          expiresIn: '7d',
-        });
-        console.log('token:', token);
-        res.send({ token });
+        const token = signToken({ _id: user._id });
+        // console.log('token:', token);
+        res.status(OK).send({ token });
       })
 
       // userModel

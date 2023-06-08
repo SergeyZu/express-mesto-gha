@@ -1,6 +1,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const router = require('./src/routes');
+// const { auth } = require('./src/middlewares/auth');
 
 const { PORT = 3000 } = process.env;
 
@@ -19,11 +20,7 @@ mongoose
   });
 
 app.use(express.json());
-app.use((req, res, next) => {
-  req.user = {
-    _id: new mongoose.Types.ObjectId('646d6819a72ab810aca5fabb'),
-  };
-  next();
-});
+
+// app.use(auth);
 
 app.use(router);
