@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
+// const jwt = require('jsonwebtoken');
 const NotFoundError = require('../errors/NotFoundError');
 const UnauthorizedError = require('../errors/UnauthorizedError');
 
@@ -59,38 +60,6 @@ const getUserById = (req, res) => {
     });
 };
 
-// const createUser = (req, res) => {
-//   // хешируем пароль
-//   bcrypt
-//     .hash(req.body.password, 10)
-//     .then((hash) => {
-//       // const { name, about, avatar, email, password } = req.body;
-//       userModel.create({
-//         name: req.body.name,
-//         about: req.body.about,
-//         avatar: req.body.avatar,
-//         email: req.body.email,
-//         password: hash,
-//       });
-//     })
-//     .then((user) => {
-//       res.status(CREATED).send(user);
-//     })
-//     .catch((err) => {
-//       if (err instanceof mongoose.Error.ValidationError) {
-//         res.status(BAD_REQUEST).send({ message: 'Ошибка валидации' });
-//         console.log(err.name);
-//         console.log(err.stack);
-//       } else {
-//         res
-//           .status(INTERNAL_SERVER_ERROR)
-//           .send({ message: 'Internal Server Error' });
-//         console.log(err.name);
-//         console.log(err.stack);
-//       }
-//     });
-// };
-
 const createUser = (req, res) => {
   const { name, about, avatar, email, password } = req.body;
 
@@ -133,41 +102,6 @@ const createUser = (req, res) => {
   });
 };
 
-// const createUser = (req, res) => {
-//   userModel
-//     .create({
-//       email: req.body.email,
-//       password: req.body.password,
-//     })
-//     .then((user) => res.send(user))
-//     .catch((err) => res.status(400).send(err));
-// };
-
-// const loginUser = (req, res) => {
-//   const { email, password } = req.body;
-
-//   userModel
-//     .findOne({ email })
-//     .then((user) => {
-//       if (!user) {
-//         return Promise.reject(new Error('Неправильные почта или пароль'));
-//       }
-
-//       return bcrypt.compare(password, user.password);
-//     })
-//     .then((matched) => {
-//       if (!matched) {
-//         return Promise.reject(new Error('Неправильные почта или пароль'));
-//       }
-//       return res.send({ message: 'Success' });
-//     })
-//     .catch((err) => {
-//       res.status(UNAUTHORIZED).send({ message: err.message });
-//     });
-
-//   res.status(OK).send({ message: 'OK' });
-// };
-
 const loginUser = (req, res) => {
   const { email, password } = req.body;
 
@@ -176,12 +110,6 @@ const loginUser = (req, res) => {
     .orFail(() => {
       throw new UnauthorizedError('Неправильные почта или пароль');
     })
-    // .then((user))
-    // .then ((user) => {
-    // res
-    //     .status(UNAUTHORIZED)
-    //     .send({ message: 'Неправильные почта или пароль' });
-    // })
     .then((user) => {
       console.log(user);
       return bcrypt.compare(password, user.password);
