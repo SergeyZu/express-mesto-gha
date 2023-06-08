@@ -109,10 +109,10 @@ const loginUser = (req, res) => {
     userModel
       .findUserByCredentials(email, password)
       .then((user) => {
-        // res.status(OK).send({ message: 'Аутентификация успешна' });
         const token = jwt.sign({ _id: user._id }, 'abra-shvabra-kadabra', {
           expiresIn: '7d',
         });
+        console.log('token:', token);
         res.send({ token });
       })
 
