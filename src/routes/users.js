@@ -3,6 +3,8 @@ const usersController = require('../controllers/users');
 
 router.get('/', usersController.getUsers);
 
+router.get('/me', usersController.getUserData);
+
 router.get('/:user_id', usersController.getUserById);
 
 router.patch('/me', usersController.updateUser);
