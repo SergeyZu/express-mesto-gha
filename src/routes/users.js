@@ -1,10 +1,10 @@
 const router = require('express').Router();
 const usersController = require('../controllers/users');
-const { validateGetUserData } = require('../middlewares/validate');
+const { validateUserId } = require('../middlewares/validate');
 
 router.get('/', usersController.getUsers);
 
-router.get('/me', validateGetUserData, usersController.getUserData);
+router.get('/me', validateUserId, usersController.getUserData);
 
 router.get('/:user_id', usersController.getUserById);
 
