@@ -7,7 +7,6 @@ const getCards = (req, res, next) => {
     .find({})
     .then((cards) => {
       res.status(200).send(cards);
-      console.log(cards);
     })
     .catch(next);
 };
