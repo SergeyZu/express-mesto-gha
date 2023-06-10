@@ -90,17 +90,6 @@ const updateUser = (req, res, next) => {
       res.status(200).send(user);
     })
     .catch(next);
-  // .catch((err) => {
-  //   if (err instanceof mongoose.Error.ValidationError) {
-  //     res.status(BAD_REQUEST).send({ message: 'Ошибка валидации' });
-  //     console.log(err);
-  //   } else {
-  //     res
-  //       .status(INTERNAL_SERVER_ERROR)
-  //       .send({ message: 'Internal Server Error' });
-  //     console.log(err);
-  //   }
-  // });
 };
 
 const updateUserAvatar = (req, res, next) => {
@@ -114,17 +103,6 @@ const updateUserAvatar = (req, res, next) => {
       res.send(user);
     })
     .catch(next);
-  // .catch((err) => {
-  //   if (err.name === 'BadRequestError') {
-  //     // if (err instanceof mongoose.Error.ValidationError) {
-  //     res.status(BAD_REQUEST).send({ message: 'Ошибка валидации' });
-  //   } else {
-  //     res
-  //       .status(INTERNAL_SERVER_ERROR)
-  //       .send({ message: 'Internal Server Error' });
-  //     console.log(err);
-  //   }
-  // });
 };
 
 module.exports = {

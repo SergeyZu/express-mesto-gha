@@ -50,12 +50,6 @@ const validateCreateCard = celebrate({
   }),
 });
 
-// const validateDeleteCard = celebrate({
-//   params: Joi.object().keys({
-//     cardId: Joi.string().alphanum().length(24),
-//   }),
-// });
-
 const validateСardId = celebrate({
   params: Joi.object().keys({
     cardId: Joi.string().alphanum().length(24),
@@ -69,6 +63,5 @@ module.exports = {
   validateUpdateUserAvatar,
   validateUserId,
   validateCreateCard,
-  // validateDeleteCard,
   validateСardId,
 };

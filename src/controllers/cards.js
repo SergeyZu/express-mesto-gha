@@ -73,7 +73,6 @@ const removeLike = (req, res, next) => {
 module.exports = {
   getCards,
   createCard,
-  // getCardOwner,
   deleteCard,
   setLike,
   removeLike,
