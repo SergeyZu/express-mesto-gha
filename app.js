@@ -1,5 +1,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
+const { errors } = require('celebrate');
+
 const { handleErrors } = require('./src/middlewares/handleErrors');
 const router = require('./src/routes');
 
@@ -22,5 +24,7 @@ mongoose
 app.use(express.json());
 
 app.use(router);
+
+app.use(errors());
 
 app.use(handleErrors);

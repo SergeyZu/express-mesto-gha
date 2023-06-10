@@ -1,9 +1,6 @@
-// const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const NotFoundError = require('../errors/NotFoundError');
-// const UnauthorizedError = require('../errors/UnauthorizedError');
-// const { signToken } = require('../utils/jwtAuth');
 const userModel = require('../models/user');
 
 const SECRET_KEY = 'abra-shvabra-kadabra';
@@ -15,12 +12,6 @@ const getUsers = (req, res, next) => {
       res.status(200).send(users);
     })
     .catch(next);
-  // .catch((err) => {
-  //   res
-  //     .status(INTERNAL_SERVER_ERROR)
-  //     .send({ message: 'Internal Server Error' });
-  //   console.log(err);
-  // });
 };
 
 const getUserById = (req, res, next) => {
@@ -33,27 +24,10 @@ const getUserById = (req, res, next) => {
       res.status(200).send(user);
     })
     .catch(next);
-  // .catch((err) => {
-  //   if (err instanceof mongoose.Error.CastError) {
-  //     res
-  //       .status(BAD_REQUEST)
-  //       .send({ message: 'Введены некорректные данные' });
-  //     console.log(err);
-  //   } else if (err instanceof NotFoundError) {
-  //     res.status(NOT_FOUND).send({ message: 'Пользователь не найден' });
-  //     console.log(err);
-  //   } else {
-  //     res
-  //       .status(INTERNAL_SERVER_ERROR)
-  //       .send({ message: 'Internal Server Error' });
-  //     console.log(err);
-  //   }
-  // });
 };
 
 const getUserData = (req, res, next) => {
   userModel
-    // .findOne({ _id: req.user._id })
     .findById(req.user._id)
     .orFail(() => {
       throw new NotFoundError('Пользователь не найден');
@@ -62,22 +36,6 @@ const getUserData = (req, res, next) => {
       res.status(200).send(user);
     })
     .catch(next);
-  // .catch((err) => {
-  //   if (err instanceof mongoose.Error.CastError) {
-  //     res
-  //       .status(BAD_REQUEST)
-  //       .send({ message: 'Введены некорректные данные' });
-  //     console.log(err);
-  //   } else if (err instanceof NotFoundError) {
-  //     res.status(NOT_FOUND).send({ message: 'Пользователь не найден' });
-  //     console.log(err);
-  //   } else {
-  //     res
-  //       .status(INTERNAL_SERVER_ERROR)
-  //       .send({ message: 'Internal Server Error' });
-  //     console.log(err);
-  //   }
-  // });
 };
 
 const createUser = (req, res, next) => {
@@ -104,22 +62,6 @@ const createUser = (req, res, next) => {
         });
       })
       .catch(next);
-    // .catch((err) => {
-    //   if (err instanceof mongoose.Error.ValidationError) {
-    //     res.status(BAD_REQUEST).send({ message: 'Ошибка валидации' });
-    //     console.log(err);
-    //   } else if (err.code === MONGO_DUPLICATE_KEY_ERROR) {
-    //     res.status(CONFLICT).send({
-    //       message: 'Пользователь с таким email уже зарегистрирован',
-    //     });
-    //     console.log(err);
-    //   } else {
-    //     res
-    //       .status(INTERNAL_SERVER_ERROR)
-    //       .send({ message: 'Internal Server Error' });
-    //     console.log(err);
-    //   }
-    // });
   });
 };
 
@@ -132,24 +74,9 @@ const loginUser = (req, res, next) => {
       const token = jwt.sign({ _id: user._id }, SECRET_KEY, {
         expiresIn: '7d',
       });
-      // const token = signToken({ _id: user._id });
-      // console.log('token:', token);
       res.status(200).send({ token });
     })
     .catch(next);
-  // .catch((err) => {
-  //   if (err instanceof UnauthorizedError) {
-  //     res
-  //       .status(UNAUTHORIZED)
-  //       .send({ message: 'Неправильные почта или пароль' });
-  //     console.log(err);
-  //   } else {
-  //     res
-  //       .status(INTERNAL_SERVER_ERROR)
-  //       .send({ message: 'Internal Server Error' });
-  //     console.log(err);
-  //   }
-  // });
 };
 
 const updateUser = (req, res, next) => {
