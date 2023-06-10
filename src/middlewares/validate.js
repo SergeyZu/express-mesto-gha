@@ -36,10 +36,17 @@ const validateDeleteCard = celebrate({
   }),
 });
 
+const validateRemoveLike = celebrate({
+  params: Joi.object().keys({
+    cardId: Joi.string().alphanum().length(24),
+  }),
+});
+
 module.exports = {
   validateCreateUser,
   validateLoginUser,
   validateGetUserData,
   validateCreateCard,
   validateDeleteCard,
+  validateRemoveLike,
 };
