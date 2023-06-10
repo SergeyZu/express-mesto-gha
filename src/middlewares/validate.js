@@ -2,7 +2,7 @@ const { celebrate, Joi } = require('celebrate');
 
 // eslint-disable-next-line operator-linebreak
 const regex =
-  /^(?:([A-Za-z]+):)?(\/{0,3})([0-9.\-A-Za-z]+)(?::(\d+))?(?:\/([^?#]*))?(?:\?([^#]*))?(?:#(.*))?$/;
+  /^(https|http)?:\/\/(www.)?[^-_.\s](\d{1,3}.\d{1,3}.\d{1,3}.\d{1,3})?(:\d+)?(.+[#a-zA-Z/:0-9]{1,})?\.(.+[#a-zA-Z/:0-9]{1,})?$/i;
 
 const validateCreateUser = celebrate({
   body: Joi.object().keys({
