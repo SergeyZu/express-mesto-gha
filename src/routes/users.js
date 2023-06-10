@@ -5,7 +5,7 @@ const {
   validateUserId,
 } = require('../middlewares/validate');
 
-router.get('/', usersController.getUsers);
+router.get('/', validateUserId, usersController.getUsers);
 
 router.get('/me', validateUserId, usersController.getUserData);
 
