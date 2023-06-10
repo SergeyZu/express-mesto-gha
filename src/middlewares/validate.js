@@ -1,30 +1,45 @@
 const { celebrate, Joi } = require('celebrate');
 
-const validateUser = celebrate({
-  body: Joi.object()
-    .keys({
-      name: Joi.string().required().min(2).max(30),
-      about: Joi.string().required().min(2).max(30),
-      avatar: Joi.string().required(),
-      email: Joi.string().required().email(),
-      password: Joi.string().required(),
-    })
-    .unknown(true),
+const validateCreateUser = celebrate({
+  body: Joi.object().keys({
+    name: Joi.string().required().min(2).max(30),
+    about: Joi.string().required().min(2).max(30),
+    avatar: Joi.string().required(),
+    email: Joi.string().required().email(),
+    password: Joi.string().required(),
+  }),
 });
 
-const validateCard = celebrate({
-  body: Joi.object()
-    .keys({
-      name: Joi.string().required().min(2).max(30),
-      link: Joi.string().required(),
-      owner: Joi.string().required(),
-      likes: Joi.string().required(),
-      createdAt: Joi.date().required(),
-    })
-    .unknown(true),
+const validateLoginUser = celebrate({
+  body: Joi.object().keys({
+    email: Joi.string().required().email(),
+    password: Joi.string().required(),
+  }),
+});
+
+const validateGetUserData = celebrate({
+  params: Joi.object().keys({
+    userId: Joi.string().alphanum().length(24),
+  }),
+});
+
+const validateCreateCard = celebrate({
+  body: Joi.object().keys({
+    name: Joi.string().required().min(2).max(30),
+    link: Joi.string().required(),
+  }),
+});
+
+const validateDeleteCard = celebrate({
+  params: Joi.object().keys({
+    cardId: Joi.string().alphanum().length(24),
+  }),
 });
 
 module.exports = {
-  validateUser,
-  validateCard,
+  validateCreateUser,
+  validateLoginUser,
+  validateGetUserData,
+  validateCreateCard,
+  validateDeleteCard,
 };
