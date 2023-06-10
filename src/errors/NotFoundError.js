@@ -1,4 +1,4 @@
-const NOT_FOUND = 400;
+const NOT_FOUND = 404;
 
 class NotFoundError extends Error {
   constructor(message) {

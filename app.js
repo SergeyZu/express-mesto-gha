@@ -1,7 +1,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
+const { handleErrors } = require('./src/middlewares/handleErrors');
 const router = require('./src/routes');
-// const { auth } = require('./src/middlewares/auth');
 
 const { PORT = 3000 } = process.env;
 
@@ -21,6 +21,6 @@ mongoose
 
 app.use(express.json());
 
-// app.use(auth);
-
 app.use(router);
+
+app.use(handleErrors);
