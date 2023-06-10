@@ -4,8 +4,8 @@ const validator = require('validator');
 const bcrypt = require('bcryptjs');
 const UnauthorizedError = require('../errors/UnauthorizedError');
 
-// const validate =
-//   /^(https|http)?:\/\/(www.)?[^-_.\s](\d{1,3}.\d{1,3}.\d{1,3}.\d{1,3})?(:\d+)?(.+[#a-zA-Z/:0-9]{1,})?\.(.+[#a-zA-Z/:0-9]{1,})?$/i;
+const validate =
+  /^(https|http)?:\/\/(www.)?[^-_.\s](\d{1,3}.\d{1,3}.\d{1,3}.\d{1,3})?(:\d+)?(.+[#a-zA-Z/:0-9]{1,})?\.(.+[#a-zA-Z/:0-9]{1,})?$/i;
 
 const userSchema = new mongoose.Schema({
   name: {
@@ -28,7 +28,7 @@ const userSchema = new mongoose.Schema({
       validator: (url) => validator.isURL(url),
       message: 'Введите корректный URL',
     },
-    // match: validate,
+    match: validate,
   },
   email: {
     type: String,
